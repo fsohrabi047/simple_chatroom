@@ -19,6 +19,6 @@ linuxNs.addRoom(new Room(1,'Red Hat',2))
 linuxNs.addRoom(new Room(2,'Ubuntu',2))
 linuxNs.addRoom(new Room(3,'Mac OS',2))
 
-const namespaces = [wikiNs,mozNs,linuxNs];
+const namespaces = [wikiNs, mozNs, linuxNs];
 
 module.exports = namespaces;

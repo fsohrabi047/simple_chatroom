@@ -1,5 +1,5 @@
-class Room{
-    constructor(roomId,roomTitle,namespaceId,privateRoom = false){
+class Room {
+    constructor(roomId, roomTitle, namespaceId, privateRoom = false) {
         this.roomId = roomId;
         this.roomTitle = roomTitle;
         this.namespaceId = namespaceId;
@@ -7,11 +7,11 @@ class Room{
         this.history = [];
     }
 
-    addMessage(message){
+    addMessage(message) {
         this.history.push(message);
     }
 
-    clearHistory(){
+    clearHistory() {
         this.history = [];
     }
 }

@@ -1,19 +1,44 @@
 const express = require('express');
 const app = express();
 const socketio = require('socket.io');
+const namespaces = require('./data/namespaces');
 
 app.use(express.static(__dirname + '/public'));
 
 const expressServer = app.listen(9000);
 const io = socketio(expressServer);
 
-io.on('connection', (socket) => {
-    socket.emit('messageFromServer', {data: "Welcome"});
-    socket.on('messageToServer', (dataFromClient) => {
-        console.log(dataFromClient);
-    })
+io.on('connection', socket => {
+    let nsData = namespaces.map( ns => {
+        return {
+            image: ns.image,
+            endpoint: ns.endpoint
+        }
+    });
+
+    socket.emit('nsList', nsData);
 });
 
-io.of('/admin').on('connection', (socket) => {
-    io.of('/admin').emit('welcome', "Welcome");
-}); 
+
+namespaces.forEach( namespace => {
+    io.of(namespace.endpoint).on('connection', nsSocket => {
+        nsSocket.emit('nsRoomLoad', namespaces[0].rooms);
+        nsSocket.on('joinRoom', (roomToJoin, numberOfUsersCallback) => {
+            nsSocket.join(roomToJoin);
+            const clientsCount = io.of('/wiki').sockets.size;
+
+            numberOfUsersCallback(clientsCount);
+        });
+        nsSocket.on('newMessageToServer', msg => {
+            const fullMsg = {
+                text: msg,
+                time: Date.now(),
+                username: "farshid",
+                avatar: 'https://via.placeholder.com/30'
+            }
+
+            const roomTitle = Object.keys(nsSocket.rooms)[1];
+            io.of('/wiki').to(roomTitle).emit('messageToClients', fullMsg);
+        })
+    });
+});
