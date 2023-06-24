@@ -12,17 +12,17 @@ function joinNs(endpoint) {
                 glyph = 'globe';
             }
 
-            roomList.innerHTML += `<li class="room" ><span class="glyphicon glyphicon-${glyph}"></span>${room.roomTitle}</li>`
+            roomList.innerHTML += `<li class="room" ><span class="glyphicon glyphicon-${glyph}"></span>${room.roomTitle}</li>`;
         });
 
         let roomNodes = document.getElementsByClassName('room');
         Array.from(roomNodes).forEach( elem => {
             elem.addEventListener('click', e => {
-                console.log(`${e.target.innerText} clicked`)
+                // console.log(`${e.target.innerText} clicked`)
             });
         });
 
-        const topRoom = document.querySelector('.rooms');
+        const topRoom = document.querySelector('.room-list');
         const topRoomName = topRoom.innerText;
         joinRoom(topRoomName);
     });
@@ -32,8 +32,9 @@ function joinNs(endpoint) {
         document.querySelector('#message').innerHTML += buildHtml(msg);
     });
 
-    document.querySelector('.message-form').addEventListener('submit', event => {
+    document.querySelector('#message-form').addEventListener('submit', event => {
         event.preventDefault();
+
         const newMessage = document.querySelector('#user-message').value;
         nsSocket.emit('newMessageToServer', {text: newMessage});
     });

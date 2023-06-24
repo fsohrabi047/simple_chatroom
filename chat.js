@@ -19,7 +19,6 @@ io.on('connection', socket => {
     socket.emit('nsList', nsData);
 });
 
-
 namespaces.forEach( namespace => {
     io.of(namespace.endpoint).on('connection', nsSocket => {
         nsSocket.emit('nsRoomLoad', namespaces[0].rooms);
@@ -30,14 +29,16 @@ namespaces.forEach( namespace => {
             numberOfUsersCallback(clientsCount);
         });
         nsSocket.on('newMessageToServer', msg => {
+            console.log(msg);
             const fullMsg = {
-                text: msg,
+                text: msg.text,
                 time: Date.now(),
                 username: "farshid",
                 avatar: 'https://via.placeholder.com/30'
             }
 
             const roomTitle = Object.keys(nsSocket.rooms)[1];
+            console.log(nsSocket.adapter.rooms);
             io.of('/wiki').to(roomTitle).emit('messageToClients', fullMsg);
         })
     });
